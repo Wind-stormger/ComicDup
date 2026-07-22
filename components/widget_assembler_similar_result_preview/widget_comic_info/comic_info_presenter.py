@@ -24,6 +24,8 @@ class ComicInfoPresenter(QObject):
 
         self.comic_info: ComicInfoBase = None  # 显示的漫画的漫画信息类
         self.is_reconfirm_before_delete = True  # 删除前是否需要再次确认
+        self._color: str = None  # 颜色标记
+        self._similarity: str = None  # 相似度百分比文本
 
         # 绑定信号
         self.viewer.OpenPath.connect(self.open_path)
@@ -85,12 +87,22 @@ class ComicInfoPresenter(QObject):
 
     def set_color(self, color: str):
         """为漫画项的文本添加颜色"""
+        self._color = color
         self.viewer.set_color(color)
+
+    def get_color(self) -> str:
+        """获取颜色标记"""
+        return self._color
 
     def set_similarity(self, similarity: str):
         """设置相似度（百分比）
         :param similarity:百分比数字文本，例如90%"""
+        self._similarity = similarity
         self.viewer.set_similarity(similarity)
+
+    def get_similarity(self) -> str:
+        """获取相似度百分比文本"""
+        return self._similarity
 
     def highlight_pages(self):
         """高亮显示页数"""

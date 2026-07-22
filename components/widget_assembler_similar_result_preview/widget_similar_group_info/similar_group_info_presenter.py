@@ -37,6 +37,11 @@ class SimilarGroupInfoPresenter(QObject):
         self.viewer.Preview.connect(self.preview)
         self.dialog_comics_preview.ComicDeleted.connect(self.dialog_comic_deleted)
 
+        # 绑定对比表格按钮信号
+        self.viewer.TableOpenPath.connect(self._on_table_open_path)
+        self.viewer.TableRefreshInfo.connect(self._on_table_refresh)
+        self.viewer.TableDelete.connect(self._on_table_delete)
+
     def set_group_index(self, index: int):
         """设置当前组的编号"""
         self.viewer.set_group_index(index)
@@ -134,6 +139,9 @@ class SimilarGroupInfoPresenter(QObject):
         # self.highlight_comic_filesize()
         self.set_group_sign(SignStatus.Pending)
 
+        # 填充对比表格
+        self._build_comparison_table()
+
     def add_comic(self, comic_info: ComicInfoBase):
         """添加内部漫画信息项"""
         # 添加一次存在性验证，不添加不存在于本地的项目
@@ -166,6 +174,42 @@ class SimilarGroupInfoPresenter(QObject):
 
         self.dialog_comics_preview.set_is_reconfirm_before_delete(is_reconfirm)
 
+    # ── 对比表格方法 ──
+
+    def _build_comparison_table(self):
+        """根据当前 comics_presenter 填充对比表格"""
+        self.viewer.clear_table()
+        for presenter in self.comics_presenter:
+            comic_info = presenter.get_comic_info()
+            color = presenter.get_color()
+            similarity = presenter.get_similarity()
+            self.viewer.add_table_row(comic_info, color, similarity)
+
+    def _find_presenter_by_comic_info(self, comic_info: ComicInfoBase):
+        """根据 comic_info 查找对应的 ComicInfoPresenter"""
+        for presenter in self.comics_presenter:
+            if presenter.get_comic_info() is comic_info:
+                return presenter
+        return None
+
+    def _on_table_open_path(self, comic_info: ComicInfoBase):
+        """表格打开路径按钮"""
+        presenter = self._find_presenter_by_comic_info(comic_info)
+        if presenter:
+            presenter.open_path()
+
+    def _on_table_refresh(self, comic_info: ComicInfoBase):
+        """表格刷新信息按钮"""
+        presenter = self._find_presenter_by_comic_info(comic_info)
+        if presenter:
+            presenter.refresh_info()
+
+    def _on_table_delete(self, comic_info: ComicInfoBase):
+        """表格删除按钮"""
+        presenter = self._find_presenter_by_comic_info(comic_info)
+        if presenter:
+            presenter.delete_comic()
+
     def comic_deleted(self):
         """漫画被删除后的操作"""
         widget_presenter: ComicInfoPresenter = self.sender()
@@ -178,6 +222,8 @@ class SimilarGroupInfoPresenter(QObject):
         # 删除存储的presenter
         self.comics_presenter.remove(widget_presenter)
         widget_presenter.deleteLater()
+        # 同步删除表格行
+        self.viewer.remove_table_row(deleted_comic_info)
         # 更新标记
         self._update_group_sign()
 
@@ -199,6 +245,8 @@ class SimilarGroupInfoPresenter(QObject):
             # 删除存储的presenter
             self.comics_presenter.remove(widget_presenter_delete)
             widget_presenter_delete.deleteLater()
+            # 同步删除表格行
+            self.viewer.remove_table_row(deleted_comic_info)
             # 更新标记
             self._update_group_sign()
         else:
