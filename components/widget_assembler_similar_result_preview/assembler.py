@@ -125,3 +125,7 @@ class AssemblerSimilarResultPreview(QObject):
     def clear(self):
         """清空结果"""
         self.presenter.clear()
+
+    def toggle_table_visible(self):
+        """切换对比表格显隐"""
+        self.presenter.toggle_table_visible()

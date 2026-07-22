@@ -174,6 +174,10 @@ class SimilarGroupInfoPresenter(QObject):
 
         self.dialog_comics_preview.set_is_reconfirm_before_delete(is_reconfirm)
 
+    def set_table_visible(self, visible: bool):
+        """设置对比表格显隐"""
+        self.viewer.set_table_visible(visible)
+
     # ── 对比表格方法 ──
 
     def _build_comparison_table(self):

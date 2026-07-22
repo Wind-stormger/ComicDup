@@ -74,14 +74,7 @@ class SimilarGroupInfoViewer(QWidget):
     # ── 对比表格方法 ──────────────────────────────────────
 
     def _init_comparison_table(self):
-        """初始化对比表格（头部折叠按钮 + 表格容器）"""
-        # 在头部栏末尾追加折叠按钮
-        self.toolButton_toggle_table = QToolButton()
-        self.toolButton_toggle_table.setText("表格 ▼")
-        self.toolButton_toggle_table.setToolTip("展开/折叠对比表格")
-        self.ui.horizontalLayout.addWidget(self.toolButton_toggle_table)
-        self.toolButton_toggle_table.clicked.connect(self._toggle_table)
-
+        """初始化对比表格容器"""
         # 分隔线（位于卡片区和表格之间）
         self._separator = QFrame(self)
         self._separator.setFrameShape(QFrame.Shape.HLine)
@@ -100,12 +93,10 @@ class SimilarGroupInfoViewer(QWidget):
         # 添加到根布局末尾
         self.ui.verticalLayout.addWidget(self.widget_comparison_table)
 
-    def _toggle_table(self):
-        """切换表格显隐"""
-        visible = not self.widget_comparison_table.isVisible()
+    def set_table_visible(self, visible: bool):
+        """设置表格显隐（由筛选器统一控制）"""
         self.widget_comparison_table.setVisible(visible)
         self._separator.setVisible(visible)
-        self.toolButton_toggle_table.setText("表格 ▲" if visible else "表格 ▼")
 
     def clear_table(self):
         """清空所有表格行"""
@@ -124,10 +115,12 @@ class SimilarGroupInfoViewer(QWidget):
 
         filepath = comic_info.filepath
 
-        # ── 行容器 ──
+        # ── 行容器（使用 Box 样式，确保内容可见）──
         row_frame = QFrame()
-        row_frame.setFrameShape(QFrame.Shape.HLine)
+        row_frame.setFrameShape(QFrame.Shape.Box)
         row_frame.setFrameShadow(QFrame.Shadow.Plain)
+        row_frame.setLineWidth(1)
+        row_frame.setStyleSheet("QFrame { border: 1px solid #d0d0d0; border-radius: 2px; margin: 2px 0; }")
         row_layout = QHBoxLayout(row_frame)
         row_layout.setContentsMargins(6, 4, 6, 4)
         row_layout.setSpacing(12)

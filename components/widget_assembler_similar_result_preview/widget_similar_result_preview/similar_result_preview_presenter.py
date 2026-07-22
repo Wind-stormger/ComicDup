@@ -61,6 +61,8 @@ class SimilarResultPreviewPresenter(QObject):
             similar_group_info_presenter.set_group_index(index_page)
             # 更新删除重复确认变量
             similar_group_info_presenter.set_is_reconfirm_before_delete(self.is_reconfirm_before_delete)
+            # 应用表格可见状态
+            similar_group_info_presenter.set_table_visible(self.model.table_visible)
             # 添加控件到变量中
             self.comic_widgets_showed.append(similar_group_info_presenter)
             # 添加控件到视图中
@@ -150,6 +152,11 @@ class SimilarResultPreviewPresenter(QObject):
         for widget in self.comic_widgets_showed:
             widget: SimilarGroupInfoPresenter
             widget.set_is_reconfirm_before_delete(is_reconfirm)
+
+    def toggle_table_visible(self):
+        """切换对比表格显隐"""
+        self.model.table_visible = not self.model.table_visible
+        self.reload()
 
     def get_group_count(self):
         """获取组数"""

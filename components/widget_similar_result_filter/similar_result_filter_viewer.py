@@ -1,5 +1,5 @@
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QWidget, QApplication
+from PySide6.QtWidgets import QWidget, QApplication, QPushButton
 
 from common.class_order import ORDER_KEYS_TEXT, ORDER_DIRECTIONS_TEXT, ORDER_KEYS, ORDER_DIRECTIONS, OrderKey, \
     OrderDirection, ORDER_KEYS_TEXT_SIMPLE
@@ -18,6 +18,7 @@ class SimilarResultFilterViewer(QWidget):
     ChangeSortDirectionInGroup = Signal(str, name='组内排序的排序方向改变')
     ChangeSortKeyBetweenGroup = Signal(str, name='组间排序的排序键值改变')
     ChangeSortDirectionBetweenGroup = Signal(str, name='组间排序的排序方向改变')
+    ToggleTable = Signal(name='切换对比表格显隐')
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -26,6 +27,12 @@ class SimilarResultFilterViewer(QWidget):
 
         # 初始化
         self._load_setting()
+
+        # 动态添加表格切换按钮
+        self.pushButton_toggle_table = QPushButton("表格")
+        self.pushButton_toggle_table.setToolTip("展开/折叠对比表格")
+        self.ui.horizontalLayout.addWidget(self.pushButton_toggle_table)
+        self.pushButton_toggle_table.clicked.connect(self.ToggleTable.emit)
 
         # 绑定信号
         self.ui.pushButton_refresh_result.clicked.connect(self.RefreshResult.emit)

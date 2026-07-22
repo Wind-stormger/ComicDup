@@ -10,7 +10,7 @@ class SimilarResultPreviewModel:
     """相似匹配结果模块的模型组件"""
 
     def __init__(self):
-        pass
+        self.table_visible: bool = False  # 对比表格是否展开
 
     def sort_item(self, group: List[ComicInfoBase], sort_key: ORDER_KEYS, sort_direction: ORDER_DIRECTIONS):
         """排序相似组内元素"""

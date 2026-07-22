@@ -562,6 +562,8 @@ class WindowPresenter(QObject):
         self.widget_similar_result_filter.ChangeSortKeyBetweenGroup.connect(self.order_similar_result_between_group)
         self.widget_similar_result_filter.ChangeSortDirectionBetweenGroup.connect(
             self.order_similar_result_between_group)
+        self.widget_similar_result_filter.ToggleTable.connect(
+            self.assembler_similar_result_preview.toggle_table_visible)
 
         self.widget_cache_manager.CacheRefresh.connect(self.refresh_cache)
         self.widget_cache_manager.CacheDeleteUseless.connect(self.delete_useless_cache)

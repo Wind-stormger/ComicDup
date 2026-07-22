@@ -16,6 +16,7 @@ class SimilarResultFilterPresenter(QObject):
     ChangeSortDirectionInGroup = Signal(str, name='组内排序的排序方向改变')
     ChangeSortKeyBetweenGroup = Signal(str, name='组间排序的排序键值改变')
     ChangeSortDirectionBetweenGroup = Signal(str, name='组间排序的排序方向改变')
+    ToggleTable = Signal(name='切换对比表格显隐')
 
     def __init__(self, viewer: SimilarResultFilterViewer, model: SimilarResultFilterModel):
         super().__init__()
@@ -33,6 +34,7 @@ class SimilarResultFilterPresenter(QObject):
         self.viewer.ChangeSortDirectionInGroup.connect(self.ChangeSortDirectionInGroup.emit)
         self.viewer.ChangeSortKeyBetweenGroup.connect(self.ChangeSortKeyBetweenGroup.emit)
         self.viewer.ChangeSortDirectionBetweenGroup.connect(self.ChangeSortDirectionBetweenGroup.emit)
+        self.viewer.ToggleTable.connect(self.ToggleTable.emit)
 
     def get_order_key_in_group(self):
         """获取组内排序的排序键"""
